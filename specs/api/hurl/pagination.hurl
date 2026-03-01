@@ -42,19 +42,21 @@ jsonpath "$.article.slug" isString
 [Captures]
 slug2: jsonpath "$.article.slug"
 
-# List with limit=1
+# List with limit=1 (most recent first, so slug2)
 GET {{host}}/api/articles?author=page_{{uid}}&limit=1
 HTTP 200
 [Asserts]
 jsonpath "$.articles" count == 1
 jsonpath "$.articlesCount" == 2
+jsonpath "$.articles[0].slug" == "{{slug2}}"
 
-# List with limit=1&offset=1
+# List with limit=1&offset=1 (second page, so slug1)
 GET {{host}}/api/articles?author=page_{{uid}}&limit=1&offset=1
 HTTP 200
 [Asserts]
 jsonpath "$.articles" count == 1
 jsonpath "$.articlesCount" == 2
+jsonpath "$.articles[0].slug" == "{{slug1}}"
 
 # Cleanup
 DELETE {{host}}/api/articles/{{slug1}}
